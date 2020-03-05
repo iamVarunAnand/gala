@@ -19,6 +19,7 @@ class GalaDataGenerator:
         self.preprocessors = preprocessors
         self.aug = aug
         self.lb = LabelBinarizer().fit(df.Class)
+        self.num_images = self.df.shape[0]
 
     def generator(self, passes = np.inf):
         # define the base path to the input images
@@ -30,7 +31,7 @@ class GalaDataGenerator:
         # loop indefinitely
         while(epochs < passes):
             # grab the list of possible indices and shuffle them
-            idxs = list(range(self.df.shape[0]))
+            idxs = list(range(self.num_images))
             np.random.shuffle(idxs)
 
             # loop through the indices in batches
