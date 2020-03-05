@@ -1,5 +1,6 @@
 # import the necessary packages
 from passion.gala.preprocessing import SimplePreprocessor
+from passion.gala.preprocessing import ScalePreprocessor
 from passion.gala.utils import MODEL_DISPATCHER
 from passion.gala.utils import GalaDataGenerator
 from keras.optimizers import Adam
@@ -14,6 +15,7 @@ BATCH_SIZE = 64
 df = pd.read_csv("../input/mod_train_folds.csv")
 
 # initialize the preprocessors
+scp = ScalePreprocessor()
 sp = SimplePreprocessor(32, 32)
 
 # initialize the data generators
