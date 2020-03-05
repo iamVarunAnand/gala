@@ -1,1 +1,2 @@
 from .simplepreprocessor import SimplePreprocessor
+from .scalepreprocessor import ScalePreprocessor
