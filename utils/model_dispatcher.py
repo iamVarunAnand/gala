@@ -1,9 +1,7 @@
 # import the necessary packages
-from classification_models.keras import Classifiers
+from passion.gala.models import ResNet18
 
 # create the model dispatcher
 MODEL_DISPATCHER = {
-    "resnet18": Classifiers.get("resnet18")[0](input_shape = (32, 32, 3),
-                                               weights = "imagenet",
-                                               include_top = False)
+    "resnet18": ResNet18.build(32, 32, 3, 4)
 }

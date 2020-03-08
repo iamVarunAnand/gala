@@ -1,8 +1,13 @@
 # import the necessary packages
 from sklearn.preprocessing import LabelBinarizer
+from passion.gala.preprocessing import SimplePreprocessor
+from passion.gala.preprocessing import ScalePreprocessor
+from passion.gala.preprocessing import MeanPreprocessor
 from cv2 import cv2
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import json
 import os
 
 
@@ -14,7 +19,7 @@ class GalaDataGenerator:
         df = df[df.height > thresh]
 
         # iniialize the instance variables
-        self.df = df[["Image", "Class"]]
+        self.df = df[["Image", "Class"]].reset_index(drop = True)
         self.batch_size = batch_size
         self.preprocessors = preprocessors
         self.aug = aug
@@ -76,3 +81,34 @@ class GalaDataGenerator:
 
                 # yield the current batch
                 yield (np.array(imgs), np.array(lbls))
+
+
+if __name__ == "__main__":
+    # load the csv file
+    df = pd.read_csv("../input/mod_train_folds.csv")
+
+    # read the dataset variables into a dictionary
+    f = open("../input/dataset_vars.json", "r")
+    dataset_vars = json.load(f)
+    f.close()
+
+    # initialize the preprocessors
+    sp = SimplePreprocessor(120, 80)
+    scp = ScalePreprocessor()
+    mp = MeanPreprocessor(dataset_vars["mean"], dataset_vars["std"])
+
+    # initialize the data generators
+    train_datagen = GalaDataGenerator(
+        df, [2], 32, 64, preprocessors = [scp, sp, mp])
+
+    gen = train_datagen.generator(passes = 1)
+    (imgs, lbls) = next(gen)
+
+    fig, ax = plt.subplots(4, 4, figsize = (16, 16))
+
+    for i in range(4):
+        for j in range(4):
+            ax[i, j].imshow(imgs[i * 4 + j].astype(np.uint8))
+
+    plt.show()
+    pass
